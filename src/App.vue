@@ -2,7 +2,7 @@
   <div id="app" :class="typeof weather.main !== 'undefined' && weather.main.temp > 16 ? 'warm' : ''">
     <main>
       <div class="search-box" v-if="typeof weather.main === 'undefined' ">
-        <input type="text" class="search-bar" placeholder="Search ..." v-model="query" @keypress="fetchWeather">
+        <input type="text" class="search-bar" placeholder="Search Country" v-model="query" @keypress="fetchWeather">
       </div>
       
       <div v-else>
@@ -19,6 +19,7 @@
           <div class="weather-box">
             <div class="temp">{{Math.round(weather.main.temp)}}⁰c</div>
             <div class="weather">{{weather.weather[0].main}}</div>
+            <div class="description">{{weather.weather[0].description}}</div>
           </div>
         </div>
       </div>
@@ -108,18 +109,22 @@ main .search-box .search-bar {
   background: none;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.55);
   background-color: rgba(255, 255, 255, 0.40);
-  border-radius: 0px 16px 0px 16px;
+  border-radius: 10px;
   transition: 0.4s;
 }
 
 main .search-box .search-bar:focus {
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
   background-color: rgba(255, 255, 255, 0.75);
-  border-radius: 16px 0px 16px 0px;
+  border-radius: 10px;
 }
 
-main .location-box .location,
-main .location-box .date {
+main .weather-wrap {
+  padding-top: 30px;
+}
+
+main .weather-wrap .location-box .location,
+main .weather-wrap .location-box .date {
   color: #FFFFFF;
   font-weight: bold;
   font-size: 32px;
@@ -127,7 +132,7 @@ main .location-box .date {
   text-shadow: 1px 3px rgba(0, 0, 0, 0.45);
 }
 
-main .location-box .date {
+main .weather-wrap .location-box .date {
   font-weight: 300;
   font-size: 20px;
   font-style: italic;
@@ -148,14 +153,23 @@ main .weather-box .temp {
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 16px;
   margin: 30px 0px;
-  box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 6px 6px rgba(0, 0, 0, 0.25);
 }
 
-main .weather-box .weather {
+main .weather-box .weather,
+main .weather-box .description {
   color: #FFFFFF;
   font-size: 48px;
   font-weight: 700;
   font-style: italic;
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+main .weather-box .description {
+  font-size: 20px;
+  font-weight: 300;
+  font-style: normal;
+  padding-top: 10px;
+  text-shadow: 5px 0px rgba(0, 0, 0, 0.25);
 }
 </style>
