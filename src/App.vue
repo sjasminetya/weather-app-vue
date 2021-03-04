@@ -30,6 +30,7 @@
 import axios from 'axios'
 export default {
   name: 'App',
+  title: 'Weather App',
   data () {
     return {
       query: '',
