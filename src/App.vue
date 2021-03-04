@@ -1,19 +1,25 @@
 <template>
-  <div id="app">
+  <div id="app" :class="typeof weather.main !== 'undefined' && weather.main.temp > 16 ? 'warm' : ''">
     <main>
-      <div class="search-box">
-        <input type="text" class="search-bar" placeholder="Search ...">
+      <div class="search-box" v-if="typeof weather.main === 'undefined' ">
+        <input type="text" class="search-bar" placeholder="Search ..." v-model="query" @keypress="fetchWeather">
       </div>
-
-      <div class="weather-wrap">
-        <div class="location-box">
-          <div class="location">Northampton, UK</div>
-          <div class="date">Monday, 20 January 2020</div>
+      
+      <div v-else>
+        <div class="search-box">
+          <input type="text" class="search-bar" placeholder="Search ..." v-model="query" @keypress="fetchWeather">
         </div>
 
-        <div class="weather-box">
-          <div class="temp">9⁰c</div>
-          <div class="weather">Rain</div>
+        <div class="weather-wrap">
+          <div class="location-box">
+            <div class="location">{{weather.name}}, {{weather.sys.country}}</div>
+            <div class="date">{{dateBuilder()}}</div>
+          </div>
+
+          <div class="weather-box">
+            <div class="temp">{{Math.round(weather.main.temp)}}⁰c</div>
+            <div class="weather">{{weather.weather[0].main}}</div>
+          </div>
         </div>
       </div>
     </main>
@@ -25,7 +31,36 @@ export default {
   name: 'App',
   data () {
     return {
-      apiKey: '431899143f36a6798a4d1e5ff1422e90'
+      apiKey: '431899143f36a6798a4d1e5ff1422e90',
+      urlBase: 'https://api.openweathermap.org/data/2.5/',
+      query: '',
+      weather: {}
+    }
+  },
+  methods: {
+    fetchWeather (e) {
+      if (e.key == "Enter") {
+        fetch(`${this.urlBase}weather?q=${this.query}&units=metric&APPID=${this.apiKey}`)
+          .then(res => {
+            return res.json()
+          }).then(this.setResults)
+      }
+    },
+    setResults (results) {
+      this.weather = results
+      console.log(this.weather)
+    },
+    dateBuilder () {
+      let d = new Date()
+      let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+      let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+      let day = days[d.getDay()]
+      let date = d.getDate()
+      let month = months[d.getMonth()]
+      let year = d.getFullYear()
+
+      return `${day} ${date} ${month} ${year}`
     }
   }
 }
@@ -47,6 +82,10 @@ body {
   background-size: cover;
   background-position: bottom;
   transition: 0.4s;
+}
+
+#app.warm {
+  background-image: url('./assets/warm.jpg');
 }
 
 main {
