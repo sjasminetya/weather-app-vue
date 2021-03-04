@@ -27,12 +27,11 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'App',
   data () {
     return {
-      apiKey: '431899143f36a6798a4d1e5ff1422e90',
-      urlBase: 'https://api.openweathermap.org/data/2.5/',
       query: '',
       weather: {}
     }
@@ -40,15 +39,12 @@ export default {
   methods: {
     fetchWeather (e) {
       if (e.key == "Enter") {
-        fetch(`${this.urlBase}weather?q=${this.query}&units=metric&APPID=${this.apiKey}`)
-          .then(res => {
-            return res.json()
-          }).then(this.setResults)
+        axios.get(`${process.env.VUE_APP_URLBASE}weather?q=${this.query}&units=metric&APPID=${process.env.VUE_APP_APIKEY}`)
+        .then(res => {
+          this.weather = res.data
+          console.log(this.weather)
+        })
       }
-    },
-    setResults (results) {
-      this.weather = results
-      console.log(this.weather)
     },
     dateBuilder () {
       let d = new Date()
